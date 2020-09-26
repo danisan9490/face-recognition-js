@@ -46,6 +46,7 @@ class App extends Component {
   }
 
   loadUser = (data) => {
+    console.log('data: ', data)
     this.setState({
       user: {
         id: data.id,
@@ -85,7 +86,6 @@ class App extends Component {
         Clarifai.FACE_DETECT_MODEL,
         this.state.input)
       .then(response => {
-        console.log(response)
         if (response) {
           fetch('http://localhost:3001/image', {
             method: 'put',
