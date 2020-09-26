@@ -13,9 +13,9 @@ const database = {
     {
       id: '1',
       name: 'Jhon',
-      email: 'john@gmail.com',
-      password: 'cookies',
-      enrtries: 0,
+      email: 'user@gmail.com',
+      password: 'a',
+      entries: 0,
       joined: new Date()
     },
     {
@@ -23,7 +23,7 @@ const database = {
       name: 'Sally',
       email: 'sally@gmail.com',
       password: 'bananas',
-      enrtries: 0,
+      entries: 0,
       joined: new Date()
     }
   ]
@@ -35,10 +35,9 @@ app.get('/', (req, res) => {
 
 
 app.post('/signin', (req, res) => {
-  console.log(req.body)
   if (req.body.email === database.user[0].email &&
     req.body.password === database.user[0].password) {
-    res.json('success')
+    res.json(database.user[0])
   } else {
     res.status(400).json('error loggin in')
   }
@@ -76,7 +75,7 @@ app.get('/profile/:id', (req, res) => {
 app.put('/image', (req, res) => {
   const { id } = req.body;
   let found = false;
-
+  console.log('body', req.body)
   database.user.forEach(user => {
     if (user.id === id) {
       found = true;
