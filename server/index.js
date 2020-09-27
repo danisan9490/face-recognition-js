@@ -3,7 +3,6 @@ let bodyParser = require('body-parser');
 const cors = require('cors');
 const knex = require('knex');
 const bcrypt = require('bcrypt-nodejs')
-const { response } = require('express');
 
 const db = knex({
   client: 'pg',
@@ -15,51 +14,11 @@ const db = knex({
   }
 });
 
-// db.select('*').from('users').then(data => console.log(data))
-
 const PORT = 3001
 const app = express();
 
 app.use(bodyParser.json())
 app.use(cors());
-
-// let database = {
-//   user: [
-//     {
-//       id: 2,
-//       name: 'Anne',
-//       email: 'anne@gmail.com',
-//       entries: '0',
-//       joined: 2020 - 09 - 27T08: 19: 21.375Z
-//     },
-//     {
-//       id: 3,
-//       name: 'Jhon',
-//       email: 'jhon@gmail.com',
-//       entries: '0',
-//       joined: 2020 - 09 - 27T08: 20: 10.116Z
-//     },
-//     {
-//       id: 6,
-//       name: 'user',
-//       email: 'user@gmail.com',
-//       entries: '0',
-//       joined: 2020 - 09 - 27T08: 23: 35.163Z
-//     },
-//     {
-//       id: 1,
-//       name: 'Ann',
-//       email: 'ann@gmail.com',
-//       entries: '3',
-//       joined: 2020 - 09 - 27T08: 15: 04.356Z
-//     }
-//   ]
-// }
-
-app.get('/', (req, res) => {
-  res.send(database.user)
-})
-
 
 app.post('/signin', (req, res) => {
   db.select('email', 'hash').from('login')
@@ -70,7 +29,6 @@ app.post('/signin', (req, res) => {
         return db.select('*').from('users')
           .where('email', '=', req.body.email)
           .then(user => {
-            console.log(user[0])
             res.json(user[0])
           })
           .catch(err => res.status(400).json('unable to get user'))
@@ -91,11 +49,11 @@ app.post('/register', (req, res) => {
     })
       .into('login')
       .returning('email')
-      .then(loginemail => {
+      .then(loginEmail => {
         return trx('users')
           .returning('*')
           .insert({
-            email: loginemail[0],
+            email: loginEmail[0],
             name: name,
             joined: new Date()
           })
@@ -106,7 +64,7 @@ app.post('/register', (req, res) => {
       .then(trx.commit)
       .catch(trx.rollback)
   })
-    .catch(err => res.status(400).json('unable to register'));
+    .catch(err => res.status(400).json('unable to register'))
 })
 
 app.get('/profile/:id', (req, res) => {

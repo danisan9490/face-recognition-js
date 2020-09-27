@@ -11,7 +11,7 @@ import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
 
 const app = new Clarifai.App({
-  apiKey: '7a0a8baf45724005a1d504143cfbf33c'
+  apiKey: 'e14cbe2dc4e74180b5ab35f88b8df27d'
 });
 
 const particlesOptions = {
@@ -46,7 +46,6 @@ class App extends Component {
   }
 
   loadUser = (data) => {
-    console.log('data: ', data)
     this.setState({
       user: {
         id: data.id,
@@ -96,8 +95,6 @@ class App extends Component {
           })
             .then(response => response.json())
             .then(count => {
-              console.log(count)
-              console.log('Count: ', count)
               this.setState(
                 Object.assign(this.state.user, { entries: count }))
             })
