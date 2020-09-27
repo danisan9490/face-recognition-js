@@ -22,26 +22,38 @@ const app = express();
 app.use(bodyParser.json())
 app.use(cors());
 
-let database = {
-  user: [
-    {
-      id: '1',
-      name: 'Jhon',
-      email: 'user@gmail.com',
-      password: 'a',
-      entries: 0,
-      joined: new Date()
-    },
-    {
-      id: '2',
-      name: 'Sally',
-      email: 'sally@gmail.com',
-      password: 'bananas',
-      entries: 0,
-      joined: new Date()
-    }
-  ]
-}
+// let database = {
+//   user: [
+//     {
+//       id: 2,
+//       name: 'Anne',
+//       email: 'anne@gmail.com',
+//       entries: '0',
+//       joined: 2020 - 09 - 27T08: 19: 21.375Z
+//     },
+//     {
+//       id: 3,
+//       name: 'Jhon',
+//       email: 'jhon@gmail.com',
+//       entries: '0',
+//       joined: 2020 - 09 - 27T08: 20: 10.116Z
+//     },
+//     {
+//       id: 6,
+//       name: 'user',
+//       email: 'user@gmail.com',
+//       entries: '0',
+//       joined: 2020 - 09 - 27T08: 23: 35.163Z
+//     },
+//     {
+//       id: 1,
+//       name: 'Ann',
+//       email: 'ann@gmail.com',
+//       entries: '3',
+//       joined: 2020 - 09 - 27T08: 15: 04.356Z
+//     }
+//   ]
+// }
 
 app.get('/', (req, res) => {
   res.send(database.user)
@@ -89,19 +101,12 @@ app.get('/profile/:id', (req, res) => {
 
 app.put('/image', (req, res) => {
   const { id } = req.body;
-  let found = false;
-  console.log('body', req.body)
-  database.user.forEach(user => {
-    if (user.id === id) {
-      found = true;
-      user.enrtries++
-      return res.json(user.enrtries);
-    }
-  })
 
-  if (!found) {
-    res.status(400).json('not found')
-  }
+  db('users').where('id', '=', id)
+    .increment('entries', 1)
+    .returning('entries')
+    .then(entries => res.json(entries[0]))
+    .catch(err => res.status(400).json('unable to get entries'))
 })
 
 
