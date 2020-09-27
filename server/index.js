@@ -2,8 +2,9 @@ const express = require('express');
 let bodyParser = require('body-parser');
 const cors = require('cors');
 const knex = require('knex');
+const { response } = require('express');
 
-const postgres = knex({
+const db = knex({
   client: 'pg',
   connection: {
     host: '127.0.0.1',
@@ -13,7 +14,7 @@ const postgres = knex({
   }
 });
 
-console.log(postgres.select('*').from('users'))
+// db.select('*').from('users').then(data => console.log(data))
 
 const PORT = 3001
 const app = express();
@@ -58,31 +59,32 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
   const { email, name, password } = req.body;
-  database.user.push({
-    id: '3',
-    name: name,
-    email: email,
-    password: password,
-    enrtries: 0,
-    joined: new Date()
-  })
-  res.json(database.user[database.user.length - 1]);
+  db('users')
+    .returning('*')
+    .insert({
+      email: email,
+      name: name,
+      joined: new Date()
+    })
+    .then(user => {
+      res.json(user[0]);
+    })
+    .catch(err => res.status(400).json('unable to register'));
 })
 
 app.get('/profile/:id', (req, res) => {
   const { id } = req.params;
-  let found = false;
-
-  database.user.forEach(user => {
-    if (user.id === id) {
-      found = true;
-      return res.json(user);
-    }
-  })
-
-  if (!found) {
-    res.status(400).json('not found')
-  }
+  db.select('*').from('users')
+    .where({
+      id: id,
+    })
+    .then(user => {
+      if (user.length) {
+        res.json(user[0])
+      } else {
+        res.status(400).json('error getting user')
+      }
+    })
 })
 
 app.put('/image', (req, res) => {
