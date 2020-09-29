@@ -37,7 +37,7 @@ A facial recognition system is a technology capable of identifying or verifying 
 
 * [Facial recognition](https://en.wikipedia.org/wiki/Facial_recognition_system)
 
-In this project I have created afull website with features including users register and log-in, number of images entries and a face recognition sistem using Clarifai API.
+In this project I have created a full website with features including users register and log-in, number of images entries and a face recognition system using Clarifai API.
 
 ## Getting Started
 
