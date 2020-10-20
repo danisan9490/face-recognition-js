@@ -88,11 +88,11 @@ Now you can see the Face Recognition web!
 
 ### Navigation
 
-* Register
+* Sign In
 
 <img src="img/register.png">
 
-* Sign In
+* Log In
 
 <img src="img/sign-in.png">
 
